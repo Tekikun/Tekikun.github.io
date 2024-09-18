@@ -7,3 +7,117 @@ title: Software
 	<h1>Software development</h1>
 	<p> Under preparation. </p>
 </div><!-- /.blurb -->
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>&lt;model-viewer&gt; template</title>
+    <meta charset="utf-8">
+    <meta name="description" content="&lt;model-viewer&gt; template">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link type="text/css" href="./styles.css" rel="stylesheet"/>
+  </head>
+  <body>
+    <!-- <model-viewer> HTML element -->
+    <!-- <model-viewer id="earth-model" src="earth_activesat.gltf" ar  -->
+    <!-- <model-viewer id="earth-model" src="earth_activesat_multishell_multiobjlayer_02yr_15yrs.gltf" ar  -->
+    <model-viewer id="earth-model" src="earth_activesat_multishell_multiobjlayer_20yr_15yrs.gltf" ar 
+    ar-modes="webxr scene-viewer quick-look" camera-controls tone-mapping="neutral" 
+    poster="poster.webp" shadow-intensity="1" auto-rotate camera-target="0m 0m 0m" 
+    camera-orbit="-416.8deg 82.91deg 10.8m" field-of-view="12deg"></model-viewer>
+      <div> Space Terrain 300-400 km:  
+        <select id="textures1">
+          <option value="show">Show</option>
+          <option value="hide">Hide</option>
+        </select>
+      </div>
+      <div> Space Terrain 450-650 km:  
+        <select id="textures2">
+          <option value="show">Show</option>
+          <option value="hide">Hide</option>
+        </select>
+      </div>
+      <div> Space Terrain 1100-1250 km:  
+        <select id="textures3">
+          <option value="show">Show</option>
+          <option value="hide">Hide</option>
+        </select>
+      </div>
+    </model-viewer>  
+    
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
+    <script src="script.js"></script>
+    <script type="module">
+      const modelViewer = document.querySelector("model-viewer#earth-model");
+      const textures1 = document.querySelector('#textures1');
+      const textures2 = document.querySelector('#textures2');
+      const textures3 = document.querySelector('#textures3');
+      const textures4 = document.querySelector('#textures4');
+
+      modelViewer.addEventListener("load", () => {
+        const earth = modelViewer.model.materials[0];
+        earth.setAlphaMode("OPAQUE");
+        // shell 1 550
+        const shell1 = modelViewer.model.materials[1]; 
+        shell1.setAlphaMode("BLEND");
+        // shell 2 650
+        const shell2 = modelViewer.model.materials[2];
+        shell2.setAlphaMode("BLEND");
+        // shell 3 1150
+        const shell3 = modelViewer.model.materials[3];
+        shell3.setAlphaMode("BLEND");
+
+        function updateAlphaValue(material, alpha) {
+          const pbr = material.pbrMetallicRoughness;
+          const baseColor = pbr.baseColorFactor;
+          baseColor[3] = alpha;
+          pbr.setBaseColorFactor(baseColor);
+        }
+
+        updateAlphaValue(shell1, 0.4)
+        updateAlphaValue(shell2, 0.4)
+        updateAlphaValue(shell3, 0.4)
+
+        textures1.addEventListener("input", (event) => {
+          const selectedValue = event.target.value;
+          const animationDuration = 1000; // 1 second
+          const startTimestamp = performance.now();
+          const alpha = selectedValue === "show" ? 0.4 : 0;
+          updateAlphaValue(shell1, alpha);
+
+          if (elapsed < animationDuration) {
+            requestAnimationFrame(animate);
+          }
+
+      requestAnimationFrame(animate);
+    });
+        textures2.addEventListener("input", (event) => {
+          const selectedValue = event.target.value;
+          const animationDuration = 1000; // 1 second
+          const startTimestamp = performance.now();
+          const alpha = selectedValue === "show" ? 0.4 : 0;
+          updateAlphaValue(shell2, alpha);
+
+          if (elapsed < animationDuration) {
+            requestAnimationFrame(animate);
+          }
+
+      requestAnimationFrame(animate);
+    });
+        textures3.addEventListener("input", (event) => {
+          const selectedValue = event.target.value;
+          const animationDuration = 1000; // 1 second
+          const startTimestamp = performance.now();
+          const alpha = selectedValue === "show" ? 0.4 : 0;
+          updateAlphaValue(shell3, alpha);
+
+          if (elapsed < animationDuration) {
+            requestAnimationFrame(animate);
+          }
+
+      requestAnimationFrame(animate);
+    });
+  });
+    </script>
+  </body>
+</html>
